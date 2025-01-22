@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>File Upload</title>
+</head>
+
+<body>
+    <h1>File Upload</h1>
+
+    <h2>Upload & Delete Files</h2>
+    <form id="uploadAndDeleteForm" enctype="multipart/form-data">
+        <input type="file" name="files" multiple required><br><br>
+        <label for="password">Password: </label>
+        <input type="password" name="password" required><br><br>
+        <button type="submit">Upload & Delete</button>
+    </form>
+
+    <h2>Upload & Save to Cloudinary</h2>
+    <form id="uploadAndSaveForm" enctype="multipart/form-data">
+        <input type="file" name="files" multiple required><br><br>
+        <label for="password">Password: </label>
+        <input type="password" name="password" required><br><br>
+        <button type="submit">Upload & Save</button>
+    </form>
+
+    <div id="result"></div>
+
+    <script>
+        // Function to handle file upload and deletion
+        document.getElementById('uploadAndDeleteForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+            const formData = new FormData(this);
+
+            fetch('/uploads/uploadAndDelete', {
+                method: 'POST',
+                body: formData,
+            })
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('result').innerHTML = `<p>${data.message}</p><p>Download Link: <a href="${data.downloadLink}" target="_blank">${data.downloadLink}</a></p>`;
+                })
+                .catch(error => {
+                    document.getElementById('result').innerHTML = `<p>Error: ${error.message}</p>`;
+                });
+        });
+
+        // Function to handle file upload and save to Cloudinary
+        document.getElementById('uploadAndSaveForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+            const formData = new FormData(this);
+
+            fetch('/uploads/uploadAndSave', {
+                method: 'POST',
+                body: formData,
+            })
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('result').innerHTML = `<p>${data.message}</p><p>Cloudinary URL: <a href="${data.downloadLink}" target="_blank">${data.downloadLink}</a></p>`;
+                })
+                .catch(error => {
+                    document.getElementById('result').innerHTML = `<p>Error: ${error.message}</p>`;
+                });
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,187 @@
+/* App.css */
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  background-color: #36393f;
+  color: white;
+}
+
+.container {
+  max-width: 500px;
+  margin: 2rem auto;
+  padding: 1.5rem;
+  background-color: #2f3136;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+  font-size: 1.5rem;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+label {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #b9bbbe;
+  margin-bottom: 0.5rem;
+}
+
+.input-group {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.input-group input {
+  flex: 1;
+  padding: 0.5rem;
+  background-color: #40444b;
+  border: 1px solid #202225;
+  border-radius: 4px;
+  color: white;
+  font-size: 0.875rem;
+  outline: none;
+}
+
+.input-group input:focus {
+  border-color: #7289da;
+}
+
+.input-group button {
+  padding: 0.5rem 1rem;
+  background-color: #7289da;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.input-group button:hover {
+  background-color: #677bc4;
+}
+
+.button {
+  width: 100%;
+  padding: 0.75rem;
+  background-color: #7289da;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.button:hover {
+  background-color: #677bc4;
+}
+
+.button:disabled {
+  background-color: #4f545c;
+  cursor: not-allowed;
+}
+
+.status {
+  padding: 1rem;
+  border-radius: 4px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-align: center;
+  margin-top: 1rem;
+}
+
+.status.error {
+  background-color: #f56565;
+}
+
+.status.success {
+  background-color: #48bb78;
+}
+
+.status.info {
+  background-color: #7289da;
+}
+
+/* Specific styles for the password input */
+.password-input {
+  width: 100%;
+  padding: 0.5rem;
+  background-color: #40444b;
+  border: 1px solid #202225;
+  border-radius: 4px;
+  color: white;
+  font-size: 0.875rem;
+  outline: none;
+  margin-bottom: 1rem; /* Add spacing below the password input */
+}
+
+.password-input:focus {
+  border-color: #7289da;
+}
+
+/* App.css */
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  background-color: #36393f;
+  color: white;
+}
+
+.app-container {
+  display: flex;
+  height: 100vh;
+}
+
+.sidebar {
+  width: 200px;
+  background-color: #2f3136;
+  padding: 1rem;
+}
+
+.nav-button-link {
+  text-decoration: none;
+}
+
+.nav-button {
+  width: 100%;
+  padding: 0.75rem;
+  background-color: #7289da;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  margin-bottom: 0.5rem;
+}
+
+.nav-button:hover {
+  background-color: #677bc4;
+}
+
+.nav-button.active {
+  background-color: #4f545c;
+}
+
+.content-area {
+  flex: 1;
+  padding: 1.5rem;
+  background-color: #36393f;
+}
+
+.page-container {
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+/* Existing styles for inputs, buttons, etc. */

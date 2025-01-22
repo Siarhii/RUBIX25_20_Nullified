@@ -39,3 +39,7 @@ coverage/
 # Operating system files
 .DS_Store
 Thumbs.db
+
+#others
+zips/
+uploads/
