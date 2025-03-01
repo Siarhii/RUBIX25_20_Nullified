@@ -1,0 +1,24 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Poppins:wght@600;700;800&display=swap');
+@font-face {
+  font-family: 'gg sans';
+  src: url('path-to-font/gg-sans-Regular.woff2') format('woff2');
+  /* Add other weights as needed */
+}
+
+/* Or use a similar alternative */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@800&display=swap');
+/* Background images for different screen sizes */
+.bg-mobile {
+  background-image: url('https://img.freepik.com/free-photo/pocket-watch-dark-background-close-up_169016-24209.jpg');
+}
+
+@media (min-width: 768px) {
+  .bg-desktop {
+      background-image: url('https://img.freepik.com/free-photo/abstract-digital-grid-background_53876-97647.jpg');
+  }
+}

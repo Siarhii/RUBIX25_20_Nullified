@@ -1,11 +1,10 @@
 const jwt = require('jsonwebtoken');
 
 function authenticateToken(req, res, next) {
-
     const token =
         req.headers.authorization?.split(' ')[1] ||
-        req.body.token ||
         req.cookies?.authToken;
+
     if (!token) {
         return res.status(401).json({ message: 'No token provided. Please log in.' });
     }
@@ -15,7 +14,13 @@ function authenticateToken(req, res, next) {
         req.user = decoded;
         next();
     } catch (error) {
-        res.status(403).json({ message: 'Invalid or expired token.' });
+        if (error.name === 'TokenExpiredError') {
+            return res.status(403).json({ message: 'Token expired. Please log in again.' });
+        } else if (error.name === 'JsonWebTokenError') {
+            return res.status(403).json({ message: 'Invalid token. Please log in again.' });
+        } else {
+            return res.status(500).json({ message: 'Internal server error during token verification.' });
+        }
     }
 }
 

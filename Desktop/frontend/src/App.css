@@ -22,6 +22,25 @@ h1 {
   margin-bottom: 1.5rem;
 }
 
+.status {
+  margin-top: 20px;
+  padding: 10px;
+  border-radius: 5px;
+  font-weight: bold;
+}
+
+.status.success {
+  background-color: #d4edda;
+  color: #155724;
+  border: 1px solid #c3e6cb;
+}
+
+.status.error {
+  background-color: #f8d7da;
+  color: #721c24;
+  border: 1px solid #f5c6cb;
+}
+
 label {
   display: block;
   font-size: 0.875rem;
@@ -184,4 +203,93 @@ body {
   margin: 0 auto;
 }
 
-/* Existing styles for inputs, buttons, etc. */
+.page-container {
+  padding: 20px;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.password-input {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.input-group {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.input-group input {
+  flex: 1;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.input-group button {
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.input-group button:hover {
+  background-color: #0056b3;
+}
+
+/* Discord-themed custom date input */
+input[type="datetime-local"] {
+  width: 100%;
+  padding: 0.5rem;
+  background-color: #40444b;
+  border: 1px solid #202225;
+  border-radius: 4px;
+  color: white;
+  font-size: 0.875rem;
+  outline: none;
+  margin-bottom: 1rem;
+}
+
+input[type="datetime-local"]:focus {
+  border-color: #7289da;
+}
+
+/* Custom styling for the calendar and time picker */
+input[type="datetime-local"]::-webkit-calendar-picker-indicator {
+  filter: invert(1); /* Invert the icon color to white */
+  cursor: pointer;
+}
+
+input[type="datetime-local"]::-webkit-datetime-edit {
+  color: white;
+}
+
+input[type="datetime-local"]::-webkit-datetime-edit-fields-wrapper {
+  background-color: #40444b;
+}
+
+input[type="datetime-local"]::-webkit-datetime-edit-text {
+  color: white;
+}
+
+input[type="datetime-local"]::-webkit-datetime-edit-month-field,
+input[type="datetime-local"]::-webkit-datetime-edit-day-field,
+input[type="datetime-local"]::-webkit-datetime-edit-year-field,
+input[type="datetime-local"]::-webkit-datetime-edit-hour-field,
+input[type="datetime-local"]::-webkit-datetime-edit-minute-field,
+input[type="datetime-local"]::-webkit-datetime-edit-second-field,
+input[type="datetime-local"]::-webkit-datetime-edit-ampm-field {
+  color: white;
+  background-color: #40444b;
+}
+
+input[type="datetime-local"]::-webkit-inner-spin-button,
+input[type="datetime-local"]::-webkit-outer-spin-button {
+  filter: invert(1); /* Invert the spinner arrows to white */
+}

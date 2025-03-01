@@ -1,0 +1,30 @@
+.hero-background {
+  background-image: url("https://images.squarespace-cdn.com/content/v1/5afdf0ad1aef1d04b9a008d6/1540832105091-SAD4QYV7PA059DTRGFX0/hero_v2.jpg?format=2500w");
+  background-position: right center; /* This will show the right side of the image on mobile */
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+/* For desktop screens */
+@media (min-width: 768px) {
+  .hero-background {
+    background-image: url("https://images.squarespace-cdn.com/content/v1/5afdf0ad1aef1d04b9a008d6/1540832105091-SAD4QYV7PA059DTRGFX0/hero_v2.jpg?format=2500w");
+    background-position: center; /* Reset to center for desktop */
+  }
+}
+
+.home {
+  background-image: url("https://images.squarespace-cdn.com/content/v1/5afdf0ad1aef1d04b9a008d6/1540832105091-SAD4QYV7PA059DTRGFX0/hero_v2.jpg?format=2500w");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  width: 100%;
+  min-height: 100vh;
+}
+
+@media screen and (max-width: 768px) {
+  .home {
+    background-image: url("path-to-mobile-optimized-image.jpg");
+    background-position: center;
+  }
+}

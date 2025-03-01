@@ -43,26 +43,51 @@ const App = () => {
 
 function EncryptPage() {
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [files, setFiles] = useState([]);
+  const [unlockDate, setUnlockDate] = useState(new Date()); // Default to current local time
   const [isEncrypting, setIsEncrypting] = useState(false);
   const [status, setStatus] = useState({ type: "", message: "" });
 
+  // Format a date in the local timezone for the <input type="datetime-local">
+  const formatLocalDateTime = (date) => {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+    const hours = String(date.getHours()).padStart(2, "0");
+    const minutes = String(date.getMinutes()).padStart(2, "0");
+    return `${year}-${month}-${day}T${hours}:${minutes}`;
+  };
+
   const handleEncryption = async () => {
-    if (!password || files.length === 0) {
+    if (!password || !confirmPassword || files.length === 0) {
       setStatus({
         type: "error",
-        message: "Please fill in all fields before proceeding",
+        message:
+          "Please fill in all fields and select files before proceeding.",
+      });
+      return;
+    }
+
+    if (password !== confirmPassword) {
+      setStatus({
+        type: "error",
+        message: "Passwords do not match. Please try again.",
       });
       return;
     }
 
     setIsEncrypting(true);
+    setStatus({ type: "", message: "" });
+
     try {
       const outputDir = await window.go.main.App.GetCurrentDirectory();
 
+      // Send the unlock date as-is (local time) to the backend
       const encryptedFilePath = await window.go.main.App.EncryptFiles(
         files,
         password,
+        unlockDate.toISOString(), // Send the date as an ISO string in local time
         outputDir
       );
 
@@ -73,7 +98,7 @@ function EncryptPage() {
     } catch (error) {
       setStatus({
         type: "error",
-        message: error.toString(),
+        message: `Encryption failed: ${error.message || error.toString()}`,
       });
     } finally {
       setIsEncrypting(false);
@@ -83,21 +108,41 @@ function EncryptPage() {
   const handleFileSelect = async () => {
     try {
       const selectedFiles = await window.go.main.App.SelectFiles();
-      if (selectedFiles) {
+      if (selectedFiles && selectedFiles.length > 0) {
         setFiles(selectedFiles);
+        setStatus({ type: "", message: "" }); // Clear previous status
+      } else {
+        setStatus({
+          type: "error",
+          message: "No files selected. Please try again.",
+        });
       }
     } catch (error) {
-      console.error("Error selecting files:", error);
       setStatus({
         type: "error",
-        message: "Error selecting files",
+        message: `Error selecting files: ${error.message || error.toString()}`,
+      });
+    }
+  };
+
+  const handleCustomDateChange = (e) => {
+    const selectedDate = new Date(e.target.value);
+    const currentDate = new Date();
+
+    // Ensure the selected date is in the future
+    if (selectedDate > currentDate) {
+      setUnlockDate(selectedDate); // Store the date in local time
+    } else {
+      setStatus({
+        type: "error",
+        message: "Custom date must be in the future.",
       });
     }
   };
 
   return (
     <div className="page-container">
-      <h1>Encrypt Files</h1>
+      <h1>Create A time capsule!</h1>
 
       <div>
         <label>Password</label>
@@ -106,6 +151,17 @@ function EncryptPage() {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           placeholder="Enter your password"
+          className="password-input"
+        />
+      </div>
+
+      <div>
+        <label>Confirm Password</label>
+        <input
+          type="password"
+          value={confirmPassword}
+          onChange={(e) => setConfirmPassword(e.target.value)}
+          placeholder="Confirm your password"
           className="password-input"
         />
       </div>
@@ -123,16 +179,31 @@ function EncryptPage() {
         </div>
       </div>
 
+      <div>
+        <label>Unlock Date</label>
+        <input
+          type="datetime-local"
+          value={formatLocalDateTime(unlockDate)} // Display in local time
+          onChange={handleCustomDateChange}
+          min={formatLocalDateTime(new Date())} // Prevent past dates/times
+        />
+      </div>
+
       <button
         className="button"
         onClick={handleEncryption}
-        disabled={isEncrypting || !password || files.length === 0}
+        disabled={
+          isEncrypting || !password || !confirmPassword || files.length === 0
+        }
       >
         {isEncrypting ? "Encrypting..." : "Encrypt Files"}
       </button>
 
       {status.message && (
-        <div className={`status ${status.type}`}>{status.message}</div>
+        <div className={`status ${status.type}`}>
+          {status.type === "error" ? "❌ " : "✅ "}
+          {status.message}
+        </div>
       )}
     </div>
   );
@@ -149,12 +220,13 @@ function DecryptPage() {
     if (!password || !encryptedFile || !outputDir) {
       setStatus({
         type: "error",
-        message: "Please fill in all fields before proceeding",
+        message: "Please fill in all fields before proceeding.",
       });
       return;
     }
 
     setIsDecrypting(true);
+    setStatus({ type: "", message: "" });
     try {
       await window.go.main.App.DecryptAndExtractCapsule(
         encryptedFile,
@@ -166,9 +238,23 @@ function DecryptPage() {
         message: "Time capsule successfully decrypted!",
       });
     } catch (error) {
+      let errorMessage = error.toString();
+
+      // Handle specific error messages
+      if (errorMessage.includes("incorrect password")) {
+        errorMessage = "Incorrect password. Please try again.";
+      } else if (errorMessage.includes("file is still locked")) {
+        errorMessage = errorMessage.replace(
+          "file is still locked",
+          "File is still locked"
+        );
+      } else {
+        errorMessage = "Decryption failed. Please try again.";
+      }
+
       setStatus({
         type: "error",
-        message: error.toString(),
+        message: errorMessage,
       });
     } finally {
       setIsDecrypting(false);
@@ -180,12 +266,17 @@ function DecryptPage() {
       const file = await window.go.main.App.SelectEncryptedFile();
       if (file) {
         setEncryptedFile(file);
+        setStatus({ type: "", message: "" });
+      } else {
+        setStatus({
+          type: "error",
+          message: "No file selected. Please try again.",
+        });
       }
     } catch (error) {
-      console.error("Error selecting file:", error);
       setStatus({
         type: "error",
-        message: "Error selecting file",
+        message: `Error selecting file: ${error.message || error.toString()}`,
       });
     }
   };
@@ -195,12 +286,19 @@ function DecryptPage() {
       const dir = await window.go.main.App.SelectOutputFolder();
       if (dir) {
         setOutputDir(dir);
+        setStatus({ type: "", message: "" });
+      } else {
+        setStatus({
+          type: "error",
+          message: "No directory selected. Please try again.",
+        });
       }
     } catch (error) {
-      console.error("Error selecting directory:", error);
       setStatus({
         type: "error",
-        message: "Error selecting directory",
+        message: `Error selecting directory: ${
+          error.message || error.toString()
+        }`,
       });
     }
   };
@@ -255,7 +353,10 @@ function DecryptPage() {
       </button>
 
       {status.message && (
-        <div className={`status ${status.type}`}>{status.message}</div>
+        <div className={`status ${status.type}`}>
+          {status.type === "error" ? "❌ " : "✅ "}
+          {status.message}
+        </div>
       )}
     </div>
   );

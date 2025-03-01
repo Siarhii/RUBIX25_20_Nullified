@@ -10,16 +10,16 @@ export function DecryptAndExtractCapsule(arg1, arg2, arg3) {
   return window['go']['main']['App']['DecryptAndExtractCapsule'](arg1, arg2, arg3);
 }
 
-export function DecryptFile(arg1, arg2, arg3) {
-  return window['go']['main']['App']['DecryptFile'](arg1, arg2, arg3);
+export function DecryptFile(arg1, arg2) {
+  return window['go']['main']['App']['DecryptFile'](arg1, arg2);
 }
 
-export function EncryptFile(arg1, arg2, arg3) {
-  return window['go']['main']['App']['EncryptFile'](arg1, arg2, arg3);
+export function EncryptFile(arg1, arg2, arg3, arg4) {
+  return window['go']['main']['App']['EncryptFile'](arg1, arg2, arg3, arg4);
 }
 
-export function EncryptFiles(arg1, arg2, arg3) {
-  return window['go']['main']['App']['EncryptFiles'](arg1, arg2, arg3);
+export function EncryptFiles(arg1, arg2, arg3, arg4) {
+  return window['go']['main']['App']['EncryptFiles'](arg1, arg2, arg3, arg4);
 }
 
 export function ExtractZip(arg1, arg2) {
@@ -40,4 +40,8 @@ export function SelectFiles() {
 
 export function SelectOutputFolder() {
   return window['go']['main']['App']['SelectOutputFolder']();
+}
+
+export function ValidatePassword(arg1) {
+  return window['go']['main']['App']['ValidatePassword'](arg1);
 }

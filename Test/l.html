@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Auth Example</title>
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+</head>
+
+<body>
+    <h1>Auth Example</h1>
+
+    <!-- Email/Password Form -->
+    <div>
+        <h2>Email/Password</h2>
+        <form id="registerForm">
+            <input type="email" id="registerEmail" placeholder="Email" required>
+            <input type="password" id="registerPassword" placeholder="Password" required>
+            <input type="text" id="registerName" placeholder="Name" required>
+            <button type="submit">Register</button>
+        </form>
+        <form id="loginForm">
+            <input type="email" id="loginEmail" placeholder="Email" required>
+            <input type="password" id="loginPassword" placeholder="Password" required>
+            <button type="submit">Login</button>
+        </form>
+    </div>
+
+    <!-- Google Sign-In Button -->
+    <div>
+        <h2>Google Sign-In</h2>
+        <div id="google-signin-button"></div>
+    </div>
+
+    <!-- Result Message -->
+    <div id="result" style="margin-top: 20px; color: green;"></div>
+
+    <script>
+        const backendUrl = 'http://localhost:8000'; // Replace with your backend URL
+
+        // Handle registration
+        document.getElementById('registerForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('registerEmail').value;
+            const password = document.getElementById('registerPassword').value;
+            const name = document.getElementById('registerName').value;
+
+            try {
+                const response = await fetch(`${backendUrl}/auth/register`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password, name }),
+                });
+                const data = await response.json();
+                if (response.ok) {
+                    localStorage.setItem('authToken', data.token); // Save token in localStorage
+                    document.getElementById('result').innerText = 'Registration successful!';
+                } else {
+                    document.getElementById('result').innerText = data.message;
+                }
+            } catch (err) {
+                document.getElementById('result').innerText = 'Error during registration';
+            }
+        });
+
+        // Handle login
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+
+            try {
+                const response = await fetch(`${backendUrl}/auth/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password }),
+                });
+                const data = await response.json();
+                if (response.ok) {
+                    localStorage.setItem('authToken', data.token); // Save token in localStorage
+                    document.getElementById('result').innerText = 'Login successful!';
+                } else {
+                    document.getElementById('result').innerText = data.message;
+                }
+            } catch (err) {
+                document.getElementById('result').innerText = 'Error during login';
+            }
+        });
+
+        // Handle Google Sign-In
+        function handleCredentialResponse(response) {
+            const { credential } = response; // Google ID token
+
+            fetch(`${backendUrl}/auth/google`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ token: credential }),
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.token) {
+                        localStorage.setItem('authToken', data.token); // Save token in localStorage
+                        document.getElementById('result').innerText = 'Google login successful!';
+                    } else {
+                        document.getElementById('result').innerText = data.message;
+                    }
+                })
+                .catch(error => {
+                    document.getElementById('result').innerText = 'Error during Google login';
+                });
+        }
+
+        // Render Google Sign-In button
+        window.onload = function () {
+            google.accounts.id.initialize({
+                client_id: '140936046473-cpunget91f68o5327p9n813ipbi4qp81.apps.googleusercontent.com', // Replace with your Google Client ID
+                callback: handleCredentialResponse,
+            });
+
+            google.accounts.id.renderButton(
+                document.getElementById('google-signin-button'),
+                { theme: 'outline', size: 'large' } // Customize the button
+            );
+        };
+    </script>
+</body>
+
+</html>
